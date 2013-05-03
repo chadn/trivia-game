@@ -1,39 +1,20 @@
-# Node Apps
-## socket.io boilerplate
+# Belly Challenge
 
-[http://socket.io](http://socket.io)
+Using Node.js with Socket.IO build a math trivia game. This game will allow for one or more players from multiple locations to participate. A question will appear on the screen, and the first player to submit the correct answer will be awarded points. Anyone can join and leave the room.
 
-![](https://github.com/nodeapps/boilerplates/raw/master/screenshots/socket.io.png)
+The game should be versioned on github, hosted on nodejitsu, and backed by solid tests.
 
-# Installation
+Take as much time as you need, ask as many questions as you'd like, and be as creative as you can. Most importantly, have fun with it.
 
-    mkdir myapp
-    cd myapp/
-    jitsu install socket.io
+# The Solution
 
-*If you do not have `jitsu` installed you can install it via `npm install jitsu -g`*
-
-
-# Usage
-
-### Starting boilerplate locally
-
-    npm start
-
-*Now you can visit http://localhost:8080 to view your application*
-
-### Deploy boilerplate to nodejitsu
-
-    jitsu deploy
-
-*You will now be prompted for a `subdomain` to deploy your application on*
-
+Stub
 
 # License
 
 (The MIT License)
 
-Copyright (c) 2013 Nodejitsu
+Copyright (c) 2013 Chad Norwood
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 
