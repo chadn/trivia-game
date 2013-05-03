@@ -28,7 +28,15 @@ io.sockets.on('connection', function (socket) {
 
     // Print messages from the client.
     socket.on('pong', function (data) {
-        console.log('SOCKET.IO: '+ data.msg);
+        console.log('SOCKET.IO PONG: '+ data.msg);
     });
+    
+    socket.on("echo", function (msg, callback) {
+        callback = callback || function () {};
+        socket.emit("echo", msg);
+        console.log('SOCKET.IO ECHO: '+ msg);
+        callback(null, "Done.");
+    });
+    
 
 });

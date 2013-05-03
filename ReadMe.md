@@ -8,7 +8,18 @@ Take as much time as you need, ask as many questions as you'd like, and be as cr
 
 # The Solution
 
-Stub
+The solution starts with nodejitsu's boilerplate for socket.io, then a test framework is added and the rest is detailed in the commit logs.
+
+
+## Testing
+
+mocha is the testing framework used.  To test, install:
+
+	npm install --dev
+
+Run tests 
+
+	npm test
 
 # License
 
