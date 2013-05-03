@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
-var app = require('express')(),
+var express = require('express'),
+    app = express(),
     server = require('http').createServer(app),
     io = require('socket.io').listen(server),
     port = 8080,
@@ -14,6 +15,7 @@ server.listen(port);
 console.log("Express server listening on port " + port);
 console.log(url);
 
+app.use('/js/', express.static(__dirname + '/js'));
 app.get('/', function (req, res) {
     res.sendfile(__dirname + '/index.html');
 });
