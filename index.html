@@ -5,13 +5,26 @@
         <title>Math Trivia</title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width">
+        <script src="/socket.io/socket.io.js"></script>
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js" ></script>
+        <script src="/js/trivia.js"></script>
+        <style>
+            #leave {display:none}
+        </style>
     </head>
     <body>
-        <p id="msg">loading...</p>
+        <h1>Welcome to Math Trivia Game</h1>
+        <p id="join">
+            Enter Name: <input type='text'>
+            <button>Join</button>
+        </p>
+        <p id="leave">
+            Welcome, <span class='userName'>[name]</span>
+            <button>Leave</button>
+        </p>
+        <div id='question'>
+        </div>
 
-
-        <script src="/socket.io/socket.io.js"></script>
-        <script src="/js/trivia.js"></script>
     </body>
 </html>
 

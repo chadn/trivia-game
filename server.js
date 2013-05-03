@@ -20,23 +20,34 @@ app.get('/', function (req, res) {
     res.sendfile(__dirname + '/index.html');
 });
 
+var users = {};
+
 //Socket.io emits this event when a connection is made.
 io.sockets.on('connection', function (socket) {
 
-    // Emit a message to send it to the client.
-    socket.emit('ping', { msg: 'Waddup, Server sees you know socket.io.' });
+    socket.on('userJoin', function (data) {
+        console.log('SOCKET.IO user added: '+ data.userName + ' for socket '+ socket.id);
+        users[socket.id] = data.userName;
+        emitUserUpdate(socket);
+    });
 
-    // Print messages from the client.
-    socket.on('pong', function (data) {
-        console.log('SOCKET.IO PONG: '+ data.msg);
+    socket.on('userLeave', function () {
+        if (!users[socket.id]) return;
+        console.log('SOCKET.IO user removed: '+ users[socket.id] + ' for socket '+ socket.id);
+        delete users[socket.id];
+        emitUserUpdate(socket);
     });
-    
-    socket.on("echo", function (msg, callback) {
-        callback = callback || function () {};
-        socket.emit("echo", msg);
-        console.log('SOCKET.IO ECHO: '+ msg);
-        callback(null, "Done.");
-    });
-    
 
 });
+
+
+function emitUserUpdate(socket) {
+    var userNames = [];
+    for (var val in users){
+        userNames.push(users[val]);
+    }
+    io.sockets.emit('users', { 
+        users: userNames,
+        msg: userNames.length + ' Active Users: '+ userNames.join(",\n") 
+    });
+}
