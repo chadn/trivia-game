@@ -5,7 +5,7 @@ var mocha = require('mocha'),
 
 var io = require('socket.io-client');
 
-describe("belly-challeng socket.io interaction with users", function() {
+describe("belly-challeng socket.io interaction with players", function() {
 
     var server, client1, client2;
     var options = {
@@ -25,58 +25,58 @@ describe("belly-challeng socket.io interaction with users", function() {
         done();
     });
 
-    it("does first userJoin", function(done) {
-        var userName = 'chadwick';
+    it("does first playerJoin", function(done) {
+        var playerName = 'chadwick';
         client1 = io.connect("http://localhost:8080", options);
 
         client1.once("connect", function() {
             
-            client1.once('users', function (data) {
+            client1.once('players', function (data) {
                 // client lives till disconnect, but we only want this test to run once,
                 // so only call done the first time then set to null
                 if (!done) return;
                 
-                expect(data.msg).to.contain(userName);
-                expect(data.users.length).to.equal(1);
+                expect(data.msg).to.contain(playerName);
+                expect(data.players.length).to.equal(1);
                 
                 if (done) done();
                 done = null;
             });
             
-            client1.emit('userJoin', { 
-                userName: userName
+            client1.emit('playerJoin', { 
+                playerName: playerName
             });
         });
     });
 
-    it("does second userJoin", function(done) {
-        var userName = 'norwood';
+    it("does second playerJoin", function(done) {
+        var playerName = 'norwood';
         client2 = io.connect("http://localhost:8080", options);
 
         client2.once("connect", function() {
             
-            client2.once('users', function (data) {
+            client2.once('players', function (data) {
                 // client lives till disconnect, but we only want this test to run once,
                 // so only call done the first time then set to null
                 if (!done) return;
 
-                expect(data.msg).to.contain(userName);
-                expect(data.users.length).to.equal(2);
+                expect(data.msg).to.contain(playerName);
+                expect(data.players.length).to.equal(2);
                 
                 if (done) done();
                 done = null;
             });
             
-            client2.emit('userJoin', { 
-                userName: userName
+            client2.emit('playerJoin', { 
+                playerName: playerName
             });
         });
     });
 
-    it("does a disconnect, users count goes down by 1", function(done) {
+    it("does a disconnect, players count goes down by 1", function(done) {
         
-        client2.once('users', function (data) {
-            expect(data.users.length).to.equal(1);
+        client2.once('players', function (data) {
+            expect(data.players.length).to.equal(1);
             done();
         });
         

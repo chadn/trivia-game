@@ -1,14 +1,14 @@
 $(document).ready(function(){
     var socket;
     
-    function joinTrivia(userName) {
+    function joinTrivia(playerName) {
         socket = io.connect();
         console.log('io.connect socket:', socket);
         
-        socket.on('users', function (data) {
-            console.log('users updated, data:', data);
-            $('.userMsg').html(data.msg);
-            updateUserStatus(data.users);
+        socket.on('players', function (data) {
+            console.log('players updated, data:', data);
+            $('.playerMsg').html(data.msg);
+            updatePlayerStatus(data.players);
         });
 
         socket.on('question', function (data) {
@@ -18,8 +18,8 @@ $(document).ready(function(){
             }
             updateQuestionHtml(data);
         });
-        socket.emit('userJoin', { 
-            userName: userName
+        socket.emit('playerJoin', { 
+            playerName: playerName
         });
     }
     function leaveTrivia() {
@@ -27,13 +27,13 @@ $(document).ready(function(){
         location.reload( true ); 
     }
     
-    function updateUserStatus(users) {
-        console.log('updateUserStatus', users);
-        var html = users.map(function(u){
+    function updatePlayerStatus(players) {
+        console.log('updatePlayerStatus', players);
+        var html = players.map(function(u){
             return '<li>'+ u.name + ' points: '+ u.points +'</li>';
         }).join('');
-        $('#status').html(users.length + " Active User"
-            + (users.length == 1 ? '' : 's')
+        $('#status').html(players.length + " Active Player"
+            + (players.length == 1 ? '' : 's')
             + "<ol>"+ html + "</ol>");
     }
     
@@ -69,11 +69,11 @@ $(document).ready(function(){
     }
     
     $('#join button').on('click', function() {
-        var userName = $('#join input').val();
-        $('.userName').html(userName);
+        var playerName = $('#join input').val();
+        $('.playerName').html(playerName);
         $('#join').hide();
         $('#leave').show();
-        joinTrivia(userName);
+        joinTrivia(playerName);
     });
     
     $('#leave button').on('click',function(){
