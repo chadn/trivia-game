@@ -23,9 +23,8 @@ $(document).ready(function(){
         });
     }
     function leaveTrivia() {
-        if (!socket) return;
-        socket.disconnect();
-        socket = null;
+        window.location = self.location;
+        location.reload( true ); 
     }
     
     function updateUserStatus(users) {

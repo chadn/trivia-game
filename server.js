@@ -5,7 +5,6 @@ var express = require('express'),
     server = require('http').createServer(app),
     io = require('socket.io').listen(server),
     tq = require('./lib/TriviaQuestions.js'),
-    users = require('./lib/Users.js'),
     MAX_NAME_LENGTH = 21;
     PORT = 8080,
     url  = 'http://localhost:' + PORT + '/';
