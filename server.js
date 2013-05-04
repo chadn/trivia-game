@@ -4,6 +4,7 @@ var express = require('express'),
     app = express(),
     server = require('http').createServer(app),
     io = require('socket.io').listen(server),
+    mathQuestions = require('./data/mathQuestions'),
     tq = require('./lib/TriviaQuestions.js'),
     MAX_NAME_LENGTH = 21;
     PORT = 8080,
@@ -16,9 +17,8 @@ if (process.env.SUBDOMAIN) {
 server.listen(PORT);
 console.log("Express server listening on port " + PORT);
 console.log(url);
-for (var nn=0; nn<100;nn++){
-    console.log(tq.getQuestion(true));    
-}
+
+tq.init(mathQuestions);
 
 app.use('/js/', express.static(__dirname + '/js'));
 app.get('/', function (req, res) {
@@ -79,7 +79,7 @@ function emitNewQuestion() {
     });
 
     setTimeout(function(){
-        var q = tq.getQuestion(true);
+        var q = tq.getQuestionObj(true);
         q.endTime = new Date().getTime() + timeToAnswerMs;
         
         io.sockets.emit('question', q);
@@ -93,7 +93,7 @@ function emitNewQuestion() {
 }
 function emitAnswer() {
     
-    var answerData = tq.getQuestion();
+    var answerData = tq.getQuestionObj();
     delete answerData.choices;
     answerData.correctAnswer = tq.getAnswer();
     answerData.endTime = new Date().getTime() + timeToEnjoyAnswerMs;
@@ -120,7 +120,7 @@ function emitAnswer() {
 
 function emitUserUpdate(socket) {
     var userData = { 
-        users: [],
+        users: []
     };
     for (var val in users){
         userData.users.push({

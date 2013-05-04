@@ -5,7 +5,7 @@ var mocha = require('mocha'),
 
 var io = require('socket.io-client');
 
-describe("user", function() {
+describe("belly-challeng socket.io interaction with users", function() {
 
     var server, client1, client2;
     var options = {
@@ -73,14 +73,14 @@ describe("user", function() {
         });
     });
 
-    it("does first userLeave, users count goes down by 1", function(done) {
+    it("does a disconnect, users count goes down by 1", function(done) {
         
         client2.once('users', function (data) {
             expect(data.users.length).to.equal(1);
             done();
         });
         
-        client1.emit('userLeave');
+        client1.disconnect();
     });
 
 });
