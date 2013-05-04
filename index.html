@@ -9,22 +9,55 @@
         <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js" ></script>
         <script src="/js/trivia.js"></script>
         <style>
-            #leave {display:none}
+            #container {
+                margin: 0 auto;
+                width: 800px;
+            }
+            #col1,#col2 {
+                float:left;
+                overflow:hidden;
+                width:420px;
+            }
+            #col2 {
+                width:360px;
+                padding-left: 15px;
+            }
+            #leave {
+                display:none;
+            }
+            p {margin:0}
+            #question {
+                padding-top: 15px;
+            }
+            li:hover {
+                background-color: #ddd;
+            }
+            li.selected {
+                background-color: #333;
+                color: #fff;
+            }
         </style>
     </head>
     <body>
-        <h1>Welcome to Math Trivia Game</h1>
-        <p id="join">
-            Enter Name: <input type='text'>
-            <button>Join</button>
-        </p>
-        <p id="leave">
-            Welcome, <span class='userName'>[name]</span>
-            <button>Leave</button>
-        </p>
-        <div id='question'>
+        <div id='container'>
+            <h1>Welcome to Math Trivia Game</h1>
+            <div id='col1'>
+                <p id="join">
+                    Enter Name: <input type="text">
+                    <button>Join</button>
+                </p>
+                <p id="leave">
+                    <span class="userMsg">Welcome, [name]</span>
+                    <button>Leave</button>
+                </p>
+                <p id="question"></p>
+                <ol id="choices"></ol>
+                <p id="answer"></p>
+            </div>
+            <div id='col2'>
+                <p id="status"></p>
+            </div>
         </div>
-
     </body>
 </html>
 
