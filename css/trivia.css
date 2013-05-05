@@ -1,0 +1,33 @@
+#container {
+    margin: 0 auto;
+    width: 800px;
+}
+#col1,#col2 {
+    float:left;
+    overflow:hidden;
+    width:420px;
+}
+#col2 {
+    width:360px;
+    padding-left: 15px;
+}
+#leave {
+    display:none;
+}
+p {
+    margin:0;
+}
+#questionContainer {
+    padding-top: 15px;
+}
+#questionContainer li {
+    width:100px;
+    padding:8px;
+}
+li:hover {
+    background-color: #ddd;
+}
+li.myChoice {
+    background-color: #333;
+    color: #fff;
+}

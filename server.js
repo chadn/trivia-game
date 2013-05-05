@@ -20,6 +20,7 @@ console.log(url);
 
 tq.init(mathQuestions);
 
+app.use('/css/', express.static(__dirname + '/css'));
 app.use('/js/', express.static(__dirname + '/js'));
 app.get('/', function (req, res) {
     res.sendfile(__dirname + '/index.html');
@@ -30,9 +31,9 @@ var points = {};
 var playerCount = 0; // count of total players joined, not active players
 var winningSocket;
 
-var nextQuestionDelayMs = 3000; // how long are players 'warned' next question is coming
-var timeToAnswerMs = 7000; // how long players have to answer question
-var timeToEnjoyAnswerMs = 5000; // how long players have to read answer
+var nextQuestionDelayMs = 3000; //5secs // how long are players 'warned' next question is coming
+var timeToAnswerMs = 7000; // 10secs // how long players have to answer question 
+var timeToEnjoyAnswerMs = 3000; //5secs // how long players have to read answer
 
 
 //Socket.io emits this event when a connection is made.
@@ -75,6 +76,7 @@ function emitNewQuestion() {
 
     io.sockets.emit('question', {
         endTime: new Date().getTime() + nextQuestionDelayMs,
+        choices: [],
         question:'Next Question ...'
     });
 
