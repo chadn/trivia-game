@@ -1,33 +1,27 @@
-#container {
-    margin: 0 auto;
-    width: 800px;
+body {
+    background-color: #DDD;
 }
-#col1,#col2 {
-    float:left;
-    overflow:hidden;
-    width:420px;
+.whiteBox {
+    background-color: #FFF;
+    padding: 10px 15px;
+    margin: 10px 0;
+    -webkit-border-radius: 6px;
+    -moz-border-radius: 6px;
+    border-radius: 6px;
 }
-#col2 {
-    width:360px;
-    padding-left: 15px;
+.header button {
+    margin-left:10px;
 }
-#leave {
+.leave {
     display:none;
 }
-p {
-    margin:0;
+.players,
+.playerMsg {
+    font-size: 17.5px;
 }
-#questionContainer {
-    padding-top: 15px;
+.players li {
+    padding: 3px 1px;
 }
-#questionContainer li {
-    width:100px;
-    padding:8px;
-}
-li:hover {
-    background-color: #ddd;
-}
-li.myChoice {
-    background-color: #333;
-    color: #fff;
+.choice {
+    margin-right: 25px;
 }

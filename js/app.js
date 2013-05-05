@@ -18,17 +18,17 @@ $(function(){
     app.AppView = Backbone.View.extend({
     
         // bind to existing html
-        el: $('#container'),
+        el: $('body'),
     
         events:{
-            "click #leave": "leaveBtnClick",
-            "keypress #join input"  : "joinOnEnter",
-            "click #join button": "joinBtnClick"
+            "click .leave": "leaveBtnClick",
+            "keypress .join input"  : "joinOnEnter",
+            "click .join button": "joinBtnClick"
         },
 
         initialize: function() {
-            this.$input = this.$('#join input');
-            this.$players = this.$('#players ol');
+            this.$input = this.$('.join input');
+            this.$players = this.$('.players ol');
             this.questionView = new app.QuestionView();
             this.answerView = new app.AnswerView();
         },
@@ -59,7 +59,9 @@ $(function(){
         },
 
         leaveBtnClick: function() {
+            console.log('leaveBtnClick');
             // close socket connection by reloading tab
+            return;
             window.location = self.location;
             location.reload( true ); 
         },
@@ -72,8 +74,8 @@ $(function(){
             console.log('joinBtnClick:', this);
             var that = this;
             var playerName = this.$input.val();
-            $('#join').hide();
-            $('#leave').show();
+            $('.join').hide();
+            $('.leave').show();
 
             this.socket = app.socket = io.connect();
             console.log('io.connect socket:', this.socket);
@@ -120,7 +122,7 @@ $(function(){
         template: _.template($('#questionTemplate').html()),
 
         events:{
-            "click li": "answerClick"
+            "click .choice": "answerClick"
         },
 
         initialize: function() {
@@ -130,7 +132,7 @@ $(function(){
         render: function() {
             // if question string does not exist, clear html
             if (this.model.get('question')) {
-                this.$el.html(this.template( this.model.toJSON() ));
+                this.$el.html(this.template( { d:this.model.toJSON() } ));
             } else {
                 this.$el.html('');
             }
@@ -145,7 +147,7 @@ $(function(){
                 return;
             }
 
-            $el.addClass('myChoice');
+            $el.addClass('myChoice btn-inverse');
             app.socket.emit('answer', { 
                 answer: $el.html(),
                 question: this.model.get('question')
@@ -171,7 +173,7 @@ $(function(){
             var data = this.model.toJSON();
             data.myChoice = $('#questionContainer .myChoice').html() || '';
             if (data.correctAnswer) {
-                this.$el.html(this.template(data));
+                this.$el.html(this.template( { d:data } ));
             } else {
                 this.$el.html('');
             }
