@@ -8,6 +8,12 @@ $(function(){
     app.question = new app.QuestionModel();
 
 
+    app.AnswerModel = Backbone.Model.extend({});
+
+    app.answer = new app.AnswerModel();
+
+
+
     // AppView is top-level piece of UI
     app.AppView = Backbone.View.extend({
     
@@ -24,6 +30,7 @@ $(function(){
             this.$input = this.$('#join input');
             this.$players = this.$('#players ol');
             this.questionView = new app.QuestionView();
+            this.answerView = new app.AnswerView();
         },
     
         render: function() {
@@ -40,13 +47,14 @@ $(function(){
         },
 
         renderQuestionAnswers: function(data) {
+            // don't re-render questions unless data contains choices
             if (data.choices) {
-                // don't re-render questions unless data contains choices
-                app.question.set(data);
+                app.question.clear({silent:true}).set(data);
             }
+            // in the initial case where player joins and receives answers before a question,
+            // answer should not be updated.
             if (app.question.get('question')) {
-                // handle initial case where player joins and receives answers before a question
-                new app.AnswerView({ model: data });
+                app.answer.clear({silent:true}).set(data);
             }
         },
 
@@ -97,7 +105,6 @@ $(function(){
         template: _.template($('#playerTemplate').html()),
 
         render: function() {
-            console.log('app.PlayerView render', this.model);
             this.$el.html(this.template(this.model));
             return this;
         }
@@ -121,8 +128,12 @@ $(function(){
         },
 
         render: function() {
-            console.log('---- app.QuestionView render', this.model.toJSON() );
-            this.$el.html(this.template( this.model.toJSON() ));
+            // if question string does not exist, clear html
+            if (this.model.get('question')) {
+                this.$el.html(this.template( this.model.toJSON() ));
+            } else {
+                this.$el.html('');
+            }
         },
 
         answerClick: function(evt) {
@@ -145,18 +156,25 @@ $(function(){
 
     app.AnswerView = Backbone.View.extend({
 
+        model: app.answer,
+
         el: $('#answerContainer'),
 
         template: _.template($('#answerTemplate').html()),
 
         initialize: function() {
-            this.model.myChoice = $('#questionContainer .myChoice').html() || '';
-            this.render();
+            this.listenTo(this.model, 'change', this.render);
         },
 
         render: function() {
-            console.log('app.AnswerView render', this.model);
-            this.$el.html(this.template(this.model));
+            console.log('app.AnswerView render', this.model.toJSON()    );
+            var data = this.model.toJSON();
+            data.myChoice = $('#questionContainer .myChoice').html() || '';
+            if (data.correctAnswer) {
+                this.$el.html(this.template(data));
+            } else {
+                this.$el.html('');
+            }
         }
     });
 

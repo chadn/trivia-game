@@ -60,24 +60,22 @@
         </script>
 
         <script type="text/template" id="answerTemplate">
-            <% if (typeof correctAnswer != 'undefined') { %>
-                <p>Correct Answer: <%- correctAnswer %>
-                <% if (winner) { %>
-                    <br>YOU WON!! You were first to answer correctly.
+            <p>Correct Answer: <%- correctAnswer %>
+            <% if (winner) { %>
+                <br>YOU WON!! You were first to answer correctly.
 
-                <% } else if (correctAnswer == myChoice) { %>
-                    <br>Sorry. You were not the first to answer.
+            <% } else if (correctAnswer == myChoice) { %>
+                <br>Sorry. You were not the first to answer.
 
-                <% } else if (correctAnswer != myChoice) { %>
-                    <br>Sorry. You did not guess correctly.
+            <% } else if (correctAnswer != myChoice) { %>
+                <br>Sorry. You did not guess correctly.
 
-                <% } %>
-                <% if (!winner && typeof winnerName == 'string') { %>
-                    <br>Winner was <%- winnerName %>
+            <% } %>
+            <% if (!winner && typeof winnerName == 'string') { %>
+                <br>Winner was <%- winnerName %>
 
-                <% } else if (!winner) { %>
-                    <br>Nobody won that one.
-                <% } %>
+            <% } else if (!winner) { %>
+                <br>Nobody won that one.
             <% } %>
         </script>
 
