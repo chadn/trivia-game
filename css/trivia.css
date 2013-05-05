@@ -19,6 +19,9 @@ body {
 .playerMsg {
     font-size: 17.5px;
 }
+.players a {
+    font-size: 12px;
+}
 .players li {
     padding: 3px 1px;
 }
