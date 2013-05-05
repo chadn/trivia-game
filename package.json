@@ -1,5 +1,5 @@
 {
-  "name": "belly-challenge",
+  "name": "trivia-game",
   "author": {
     "name": "Chad Norwood",
     "email": "chad@chadnorwood.com"
@@ -8,7 +8,7 @@
     "test": "node_modules/mocha/bin/mocha --reporter spec test/*.test.js",
     "start": "node server.js"
   },
-  "version": "0.1.5",
+  "version": "0.1.6",
   "dependencies": {
     "socket.io": "0.9.x",
     "express": "3.0.x"
@@ -23,6 +23,6 @@
   },
   "analyze": false,
   "readmeFilename": "ReadMe.md",
-  "subdomain": "belly-challenge",
+  "subdomain": "trivia-game",
   "description": "A Math Trivia Game, using node.js and socket.io, for bellycard.com"
 }
