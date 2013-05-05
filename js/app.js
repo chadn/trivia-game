@@ -59,9 +59,10 @@ $(function(){
         },
 
         leaveBtnClick: function() {
-            console.log('leaveBtnClick');
             // close socket connection by reloading tab
-            return;
+            if (!confirm('Are you sure you want to leave the Trivia Game?\nYou will loose all your points.')) {
+                return;
+            }
             window.location = self.location;
             location.reload( true ); 
         },
