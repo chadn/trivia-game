@@ -134,7 +134,7 @@ $(function(){
             // if question string does not exist, clear html
             if (this.model.get('question')) {
                 this.$el.html(this.template( { d:this.model.toJSON() } ));
-                this.updateProgressBar()
+                this.updateProgressBar();
             } else {
                 this.$el.html('');
             }
@@ -209,5 +209,5 @@ $(function(){
     });
 
 
-    var App = new app.AppView;
+    var App = new app.AppView();
 });
