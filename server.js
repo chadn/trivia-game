@@ -31,9 +31,9 @@ var points = {};
 var playerCount = 0; // count of total players joined, not active players
 var winningSocket;
 
-var nextQuestionDelayMs = 3000; //5secs // how long are players 'warned' next question is coming
-var timeToAnswerMs = 7000; // 10secs // how long players have to answer question 
-var timeToEnjoyAnswerMs = 3000; //5secs // how long players have to read answer
+var nextQuestionDelayMs = 5000; //5secs // how long are players 'warned' next question is coming
+var timeToAnswerMs = 10000; // 10secs // how long players have to answer question 
+var timeToEnjoyAnswerMs = 5000; //5secs // how long players have to read answer
 
 
 //Socket.io emits this event when a connection is made.
@@ -75,6 +75,7 @@ function emitNewQuestion() {
     winningSocket = null;
 
     io.sockets.emit('question', {
+        totalTime: nextQuestionDelayMs,
         endTime: new Date().getTime() + nextQuestionDelayMs,
         choices: [],
         question:'Next Question ...'
@@ -83,6 +84,7 @@ function emitNewQuestion() {
     setTimeout(function(){
         var q = tq.getQuestionObj(true);
         q.endTime = new Date().getTime() + timeToAnswerMs;
+        q.totalTime = timeToAnswerMs;
         
         io.sockets.emit('question', q);
         
@@ -99,6 +101,7 @@ function emitAnswer() {
     delete answerData.choices;
     answerData.correctAnswer = tq.getAnswer();
     answerData.endTime = new Date().getTime() + timeToEnjoyAnswerMs;
+    answerData.totalTime = timeToEnjoyAnswerMs;
     answerData.winner = false;
     
     if (winningSocket) {

@@ -133,9 +133,36 @@ $(function(){
             // if question string does not exist, clear html
             if (this.model.get('question')) {
                 this.$el.html(this.template( { d:this.model.toJSON() } ));
+                this.updateProgressBar()
             } else {
                 this.$el.html('');
             }
+        },
+
+        updateProgressBar: function() {
+            var $prog = $('#questionContainer .progress');
+            var $bar = $('#questionContainer .bar');
+            var now = new Date().getTime();
+            var d = this.model.toJSON();
+            var pct = Math.floor(100 * (d.endTime - now) / d.totalTime);
+            if (pct < 2) {
+                pct = 0;
+            }
+            $bar.width(pct + '%');
+            if (pct < 20) {
+                $prog.removeClass('progress-info progress-warning').addClass('progress-danger');
+                
+            } else if (pct < 40) {
+                $prog.removeClass('progress-info').addClass('progress-warning');
+            }
+            if (pct < 1) {
+                // if 0 or negative, no need to update again.
+                return;
+            }
+            var that = this;
+            setTimeout(function() {
+                that.updateProgressBar();
+            }, 100);
         },
 
         answerClick: function(evt) {

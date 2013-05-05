@@ -58,6 +58,9 @@
         </script>
 
         <script type="text/template" id="questionTemplate">
+            <div class="progress progress-striped">
+                <div class="bar" style="width: 100%;"></div>
+            </div>
             <h3>
                 <% if (d.points) { %>
                     <span class="badge badge-important"><%- d.points %> pts</span> &nbsp;
