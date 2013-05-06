@@ -38,7 +38,7 @@ io.sockets.on('connection', function (socket) {
     socket.on('playerJoin', function (data) {
         console.log('SOCKET.IO player added: '+ data.playerName + ' for socket '+ socket.id);
         players.addPlayer({
-            socketId: socket.id,
+            playerId: socket.id,
             name: data.playerName
         });
         emitPlayerUpdate(socket);

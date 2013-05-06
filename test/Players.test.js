@@ -12,75 +12,129 @@ describe("Players", function() {
         done();
     });
 
-    it("addPlayer()", function(done) {
+    it("addPlayer() and getPlayerName()", function(done) {
         players.addPlayer({
-            socketId:1, 
+            playerId: 'id', 
             name:'chad1'
         });
-        expect( players.getPlayerName(1) ).to.be.equal('chad1');
+        expect( players.getPlayerName('id') ).to.be.equal('chad1');
         done();
     });
 
+
     it("removePlayer()", function(done) {
         players.addPlayer({
-            socketId:1, 
+            playerId: 'id', 
             name:'chad1'
         });
-        expect( players.getPlayerName(1) ).to.be.equal('chad1');
+        expect( players.getPlayerName('id') ).to.be.equal('chad1');
 
-        players.removePlayer(1);
-        expect( players.getPlayerName(1) ).to.be.equal(undefined);
+        players.removePlayer('id');
+        expect( players.getPlayerName('id') ).to.be.equal(undefined);
+        
+        done();
+    });
+
+    it("handles points: addPlayerPoints() and getPlayerPoints()", function(done) {
+        players.addPlayer({
+            playerId:'id', 
+            name:'chad1'
+        });
+        expect( players.getPlayerPoints('id') ).to.be.equal(0);
+
+        players.addPlayerPoints('id', 5);
+        expect( players.getPlayerPoints('id') ).to.be.equal(5);
+
+        players.addPlayerPoints('id', 20);
+        expect( players.getPlayerPoints('id') ).to.be.equal(25);
         
         done();
     });
 
     it("getPlayerCount()", function(done) {
+        var count = players.getPlayerCount();
+        expect( count ).to.be.a('Number');
+        
         players.addPlayer({
-            socketId:1, 
+            playerId: 'id', 
             name:'chad1'
         });
-        expect( players.getPlayerName(1) ).to.be.equal('chad1');
+        expect( players.getPlayerCount() ).to.be.equal( count + 1 );
 
-        players.removePlayer(1);
-        expect( players.getPlayerName(1) ).to.be.equal(undefined);
+        done();
+    });
+
+    it("resets on init", function(done) {
+        players.addPlayer({
+            playerId: 'id', 
+            name:'chad1'
+        });
+        expect( players.getPlayerCount() ).to.be.at.least(1);
+
+        players.init();
+        expect( players.getPlayerCount() ).to.be.equal(0);
         
         done();
     });
 
+    it("getPlayerData()", function(done) {
+        players.init();
+        players.addPlayer({
+            playerId: 'id', 
+            name:'chad1'
+        });
+        players.addPlayerPoints('id', 5);
+        players.addPlayerPoints('id', 20);
+        
+        var pd = players.getPlayerData('id');
+
+        expect( pd ).to.be.an('object');
+        expect( pd.players[0].name ).to.be.equal( 'chad1' );
+        expect( pd.players[0].points ).to.be.equal( 25 );
+
+        done();
+    });
+
+    it("should normalize name, normalizePlayerName() via addPlayer()", function(done) {
+
+        var names = [{
+            // assigns default name based on playerCount
+            name: ' ',
+            normalized: 'Player_1'
+        },{
+            // preserves case
+            name: 'chadRocks',
+            normalized: 'chadRocks'
+        },{
+            // removes non-alpha
+            name: 'hi <script bad="stuff?">',
+            normalized: 'hi_script_badstuff'
+        },{
+            // removes more non-alpha, max string length
+            name: '%3Cscript+more+bad%3D%22stuff&$$$$',
+            normalized: '3Cscriptmorebad3D22st_'
+        },{
+            // MAX_NAME_LENGTH.  Note ends with _ if it was too long
+            name: '1234567890123456789012345',
+            normalized: '123456789012345678901_' // 22 
+        },{
+            // trims 
+            name: ' chad   is  **NICE** ',
+            normalized: 'chad_is_NICE'
+        }]
+        
+        players.init();
+
+        for (var ii=0; ii<names.length; ii++) {
+            players.addPlayer({
+                playerId: ii, 
+                name: names[ii].name
+            });
+            expect( players.getPlayerName(ii) ).to.be.equal( names[ii].normalized );
+        }
+
+        done();
+    });
 
 });
 
-
-/*
-
-Players.prototype.getPlayerPoints = function(socketId) {
-    return this.points[socketId];
-}
-Players.prototype.addPlayerPoints = function(socketId, points) {
-    this.points[socketId] += points;
-    return this.points[socketId];
-}
-
-Players.prototype.getPlayerCount = function() {
-    return this.playerCount;
-}
-
-Players.prototype.getPlayerData = function() {
-    var playerData = { 
-        players: []
-    };
-    for (var socketId in this.players){
-        playerData.players.push({
-            points: this.points[socketId],
-            name: this.players[socketId]
-        });
-    }
-    playerData.players.sort(function(a,b) {
-        return b.points - a.points || a.name > b.name;
-    });
-    return this.playerData = playerData;
-}
-
-
-Players.prototype.normalizePlayerName = function(name) {
-*/
