@@ -6,7 +6,7 @@ var express = require('express'),
     io = require('socket.io').listen(server),
     mathQuestions = require('./data/mathQuestions'),
     tq = require('./lib/TriviaQuestions.js'),
-    MAX_NAME_LENGTH = 21;
+    players = require('./lib/Players.js'),
     PORT = 8080,
     url  = 'http://localhost:' + PORT + '/';
 
@@ -26,10 +26,6 @@ app.get('/', function (req, res) {
     res.sendfile(__dirname + '/index.html');
 });
 
-var players = {};
-var points = {};
-var playerCount = 0; // count of total players joined, not active players
-var winningSocket;
 
 var nextQuestionDelayMs = 5000; //5secs // how long are players 'warned' next question is coming
 var timeToAnswerMs = 10000; // 10secs // how long players have to answer question 
@@ -41,38 +37,40 @@ io.sockets.on('connection', function (socket) {
 
     socket.on('playerJoin', function (data) {
         console.log('SOCKET.IO player added: '+ data.playerName + ' for socket '+ socket.id);
-        playerCount++;
-        players[socket.id] = normalizePlayername(data.playerName);
-        points[socket.id] = 0;
+        players.addPlayer({
+            socketId: socket.id,
+            name: data.playerName
+        });
         emitPlayerUpdate(socket);
-        if (playerCount == 1) {
+        if (players.getPlayerCount() == 1) {
             // start game!
             emitNewQuestion();
         }
     });
-    socket.on('disconnect', function() { 
-        console.log('SOCKET.IO player disconnect: '+ players[socket.id] + ' for socket '+ socket.id);
-        if (!players[socket.id]) {
+    socket.on('disconnect', function() {
+        var pname = players.getPlayerName(socket.id);
+        console.log('SOCKET.IO player disconnect: '+ pname + ' for socket '+ socket.id);
+        if (!pname) {
             // already disconnected
             return;
         }
-        delete players[socket.id];
+        players.removePlayer(socket.id);
         emitPlayerUpdate();
     });
 
     socket.on('answer', function (data) { 
         console.log('SOCKET.IO player answered: "'+ data.answer + '" for question: '+ data.question);
         // TODO: handle case where player might have already answered (damn hackers)
-        if (tq.isCorrect(data) && !winningSocket) {
+        if (tq.isCorrect(data) && !players.winningSocket) {
             console.log('SOCKET.IO player correct ! =========> : "'+ data.answer + '", '+ players[socket.id] + ' for socket '+ socket.id);
-            winningSocket = socket;
+            players.winningSocket = socket;
         }
     });
 
 });
 
 function emitNewQuestion() {
-    winningSocket = null;
+    players.winningSocket = null;
 
     io.sockets.emit('question', {
         totalTime: nextQuestionDelayMs,
@@ -104,15 +102,16 @@ function emitAnswer() {
     answerData.totalTime = timeToEnjoyAnswerMs;
     answerData.winner = false;
     
-    if (winningSocket) {
-        answerData.winnerName = players[winningSocket.id];
-        points[winningSocket.id] += answerData.points;
-        emitPlayerUpdate();
+    if (players.winningSocket) {
+        answerData.winnerName = players.getPlayerName(players.winningSocket.id);
+        players.addPlayerPoints(players.winningSocket.id, answerData.points);
         
-        winningSocket.broadcast.emit('question', answerData); // emit to all but winner 
+        emitPlayerUpdate(); // send update because points changed
+        
+        players.winningSocket.broadcast.emit('question', answerData); // emit to all but winner 
 
         answerData.winner = true;
-        winningSocket.emit('question', answerData); // emit only to winner
+        players.winningSocket.emit('question', answerData); // emit only to winner
         
     } else {
         io.sockets.emit('question', answerData); // emit to everyone (no winner)
@@ -124,37 +123,15 @@ function emitAnswer() {
 }
 
 function emitPlayerUpdate(socket) {
-    var playerData = { 
-        players: []
-    };
-    for (var val in players){
-        playerData.players.push({
-            points: points[val],
-            name: players[val]
-        });
-    }
-    playerData.players.sort(function(a,b) {
-        return b.points - a.points || a.name > b.name;
-    });
-    
+    var playerData = players.getPlayerData();
     if (socket) {
         socket.broadcast.emit('players', playerData); // emit to all but socket 
 
-        playerData.msg = 'Welcome, '+ players[socket.id];
+        playerData.msg = 'Welcome, '+ players.getPlayerName(socket.id);
         socket.emit('players', playerData); // emit only to socket
         
     } else {
         io.sockets.emit('players', playerData); // emit to everyone (points update)
     }
-}
-function normalizePlayername(name) {
-    //name = 'Chad 42 "rocks"  the house';
-    name = name || '';
-    name = name.replace(/\s+/g,'_');
-    name = name.replace(/\W/g,'');
-    if (name.length > MAX_NAME_LENGTH) {
-        name = name.substring(0,MAX_NAME_LENGTH-2) + '_';
-    }
-    return name ? name : 'Player' + playerCount;
 }
 
