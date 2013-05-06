@@ -37,6 +37,46 @@ var mathQuestions = [{
         '30 mpg',
         '40 mpg'
     ]
+},{
+    question: "What is the probability of rolling a pair of dice and getting the same number?",
+    choices: [
+        '1/6',
+        '1/12',
+        '1/4',
+        '1/18'
+    ]
+},{
+    question: "What's the area of a circle with radius 5?",
+    choices: [
+        '79',
+        '25',
+        '16',
+        '31'
+    ]
+},{
+    question: "What is 15% of 420?",
+    choices: [
+        '63',
+        '57',
+        '61',
+        '69'
+    ]
+},{
+    question: "How much is a googol? Note 10^3 means 10 x 10 x 10",
+    choices: [
+        '10^100',
+        '10^10',
+        '10^15',
+        '10^20'
+    ]
+},{
+    question: "What is the least prime natural number?",
+    choices: [
+        '2',
+        '1',
+        '3',
+        '0'
+    ]
 }];
 
 if (typeof module == 'object') {
