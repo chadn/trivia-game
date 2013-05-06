@@ -5,7 +5,7 @@
     "email": "chad@chadnorwood.com"
   },
   "scripts": {
-    "test": "node_modules/mocha/bin/mocha --reporter spec test/*.test.js",
+    "test": "PORT=8420 node_modules/mocha/bin/mocha --reporter spec test/*.test.js",
     "start": "node server.js"
   },
   "version": "0.1.7",

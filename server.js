@@ -7,7 +7,7 @@ var express = require('express'),
     mathQuestions = require('./data/mathQuestions'),
     tq = require('./lib/TriviaQuestions.js'),
     players = require('./lib/Players.js'),
-    PORT = 8080,
+    PORT = process.env.PORT || 8080,
     url  = 'http://localhost:' + PORT + '/';
 
 if (process.env.SUBDOMAIN) {
@@ -19,6 +19,7 @@ console.log("Express server listening on port " + PORT);
 console.log(url);
 
 tq.init(mathQuestions);
+players.init();
 
 app.use('/css/', express.static(__dirname + '/css'));
 app.use('/js/', express.static(__dirname + '/js'));

@@ -1,5 +1,7 @@
 var mocha = require('mocha'),
     chai = require('chai'),
+    PORT = process.env.PORT || 8080,
+    url  = 'http://localhost:' + PORT + '/',
     expect = chai.expect,
     should = chai.should();
 
@@ -27,7 +29,7 @@ describe("belly-challeng socket.io interaction with players", function() {
 
     it("does first playerJoin", function(done) {
         var playerName = 'chadwick';
-        client1 = io.connect("http://localhost:8080", options);
+        client1 = io.connect(url, options);
 
         client1.once("connect", function() {
             
@@ -51,7 +53,7 @@ describe("belly-challeng socket.io interaction with players", function() {
 
     it("does second playerJoin", function(done) {
         var playerName = 'norwood';
-        client2 = io.connect("http://localhost:8080", options);
+        client2 = io.connect(url, options);
 
         client2.once("connect", function() {
             
