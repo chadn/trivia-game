@@ -18,6 +18,7 @@ describe("Players", function() {
             name:'chad1'
         });
         expect( players.getPlayerName('id') ).to.be.equal('chad1');
+        expect( players.getPlayerName('not exist') ).to.be.equal('');
         done();
     });
 
@@ -30,7 +31,7 @@ describe("Players", function() {
         expect( players.getPlayerName('id') ).to.be.equal('chad1');
 
         players.removePlayer('id');
-        expect( players.getPlayerName('id') ).to.be.equal(undefined);
+        expect( players.getPlayerName('id') ).to.be.equal('');
         
         done();
     });
@@ -95,6 +96,7 @@ describe("Players", function() {
         done();
     });
 
+
     it("should normalize name, normalizePlayerName() via addPlayer()", function(done) {
 
         var names = [{
@@ -134,6 +136,34 @@ describe("Players", function() {
         }
 
         done();
+    });
+
+
+    it("updates times: lastActive() and ", function(done) {
+        players.init();
+        var startMs = new Date().getTime();
+        var p = players.addPlayer({
+            playerId: 'id', 
+            name:'chad1'
+        });
+        expect( p.lastWinTime ).to.be.equal( 0 );
+        expect( p.createdTime ).to.be.at.least( startMs );
+        expect( p.lastActiveTime ).to.be.at.least( startMs );
+
+        players.addPlayerPoints('id', 5);
+        expect( p.lastWinTime ).to.be.at.least( startMs );
+        
+        setTimeout(function(){
+            var nowMs = new Date().getTime();
+            
+            players.lastActive('id');
+            var p = players.getPlayer('id');
+            
+            expect( p.lastActiveTime ).to.be.at.least( nowMs );
+            expect( p.lastActiveTime ).to.be.at.above( p.lastWinTime );
+
+            done();
+        }, 10)
     });
 
 });

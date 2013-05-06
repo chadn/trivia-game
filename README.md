@@ -54,8 +54,8 @@ This list contains ideas. Can be generic (improve design) or specific (store cli
 - [ ] client: add fun popups/animations if winner
 - [ ] client: improve design
 - [ ] client: add treatment to button of correct answer, like flashing green
-- [ ] client: add details on players (createTime, lastActivityTime)
-- [ ] players: store more player fields: client IP, createTime, lastActivityTime
+- [x] client: add details on players (createTime, lastActiveTime)
+- [x] players: store more player fields: client IP, createTime, lastActiveTime
 - [ ] players: store in db. Currently a server restart loose player info
 - [ ] questions: support meta info for group of questions: description, version, category
 - [ ] questions: support categoy per question (default to questions category if none)

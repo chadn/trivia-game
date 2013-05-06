@@ -37,11 +37,13 @@ var timeToEnjoyAnswerMs = 5000; //5secs // how long players have to read answer
 io.sockets.on('connection', function (socket) {
 
     socket.on('playerJoin', function (data) {
-        console.log('SOCKET.IO player added: '+ data.playerName + ' for socket '+ socket.id);
-        players.addPlayer({
+        var ip = socket.handshake.address.address;
+        var p = players.addPlayer({
             playerId: socket.id,
+            clientIp: ip,
             name: data.playerName
         });
+        console.log('SOCKET.IO player added: '+ p.name + ' from '+ ip + ' for socket '+ socket.id);
         emitPlayerUpdate(socket);
         if (players.getPlayerCount() == 1) {
             // start game!
@@ -61,6 +63,7 @@ io.sockets.on('connection', function (socket) {
 
     socket.on('answer', function (data) { 
         console.log('SOCKET.IO player answered: "'+ data.answer + '" for question: '+ data.question);
+        players.lastActive(socket.id);
         // TODO: handle case where player might have already answered (damn hackers)
         if (tq.isCorrect(data) && !players.winningSocket) {
             console.log('SOCKET.IO player correct ! =========> : "'+ data.answer + '", '+ players[socket.id] + ' for socket '+ socket.id);
