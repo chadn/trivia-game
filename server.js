@@ -28,6 +28,7 @@ app.get('/', function (req, res) {
     res.sendfile(__dirname + '/index.html');
 });
 
+io.set('log level', 2); // 1 == warn, 2 == info, 3 == debug
 
 var nextQuestionDelayMs = 5000; //5secs // how long are players 'warned' next question is coming
 var timeToAnswerMs = 10000; // 10secs // how long players have to answer question 
