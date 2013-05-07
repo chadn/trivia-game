@@ -32,7 +32,10 @@ app.get('/', function (req, res) {
 var nextQuestionDelayMs = 5000; //5secs // how long are players 'warned' next question is coming
 var timeToAnswerMs = 10000; // 10secs // how long players have to answer question 
 var timeToEnjoyAnswerMs = 5000; //5secs // how long players have to read answer
-var running = true;
+var running = false;
+emitNewQuestion();
+console.log('Game paused, to start, join as "' + CMDKEY +'resume"');
+
 
 //Socket.io emits this event when a connection is made.
 io.sockets.on('connection', function (socket) {
@@ -52,8 +55,8 @@ io.sockets.on('connection', function (socket) {
         });
         console.log('SOCKET.IO player added: '+ p.name + ' from '+ ip + ' for socket '+ socket.id);
         emitPlayerUpdate(socket);
-            emitNewQuestion();
     });
+
     socket.on('disconnect', function() {
         var pname = players.getPlayerName(socket.id);
         console.log('SOCKET.IO player disconnect: '+ pname + ' for socket '+ socket.id);
