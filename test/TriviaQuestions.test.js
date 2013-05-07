@@ -56,9 +56,9 @@ describe("TriviaQuestions", function() {
     });
 
     it("has correct typeof for question and answer", function(done) {
-        tq.getQuestionObj(true);
-        tq.getQuestionObj(true);
-        var qo = tq.getQuestionObj(true);
+        tq.generateStoredQuestionObj();
+        tq.generateStoredQuestionObj();
+        var qo = tq.generateStoredQuestionObj();
 
         expect( qo ).to.be.an('object');
         expect( qo.question ).to.be.a('string');
@@ -72,18 +72,18 @@ describe("TriviaQuestions", function() {
     });
 
     it("assigns default points", function(done) {
-        var qo1 = tq.getQuestionObj(true);
+        var qo1 = tq.generateStoredQuestionObj();
         expect( validPoints(qo1) ).to.be.true;
 
-        var qo2 = tq.getQuestionObj(true);
+        var qo2 = tq.generateStoredQuestionObj();
         expect( validPoints(qo2) ).to.be.true;
         
         done();
     });
 
     it("asks all questions before repeating", function(done) {
-        var qo1 = tq.getQuestionObj(true);
-        var qo2 = tq.getQuestionObj(true);
+        var qo1 = tq.generateStoredQuestionObj();
+        var qo2 = tq.generateStoredQuestionObj();
 
         expect( qo1.question ).to.not.be.equal( qo2.question );
 
@@ -91,13 +91,21 @@ describe("TriviaQuestions", function() {
     });
 
     it("correctly does getAnswer() and isCorrect()", function(done) {
-        var qo = tq.getQuestionObj(true);
+        var qo = tq.generateStoredQuestionObj();
         var data = validateQA(qo);
-        
+
         expect( tq.getAnswer() ).to.be.equal( data.answer );
         expect( tq.isCorrect(data) ).to.be.equal( true );
 
         done();
     });
 
+    it("correctly does generateMultiplyQuestionObj()", function(done) {
+        var qo = tq.generateMultiplyQuestionObj();
+
+        expect( qo.choices.indexOf(tq.getAnswer()) ).to.be.at.least( 0 );
+
+        done();
+    });
+    
 });

@@ -84,7 +84,7 @@ function emitNewQuestion() {
     });
 
     setTimeout(function(){
-        var q = tq.getQuestionObj(true);
+        var q = tq.generateQuestionObj();
         q.endTime = new Date().getTime() + timeToAnswerMs;
         q.totalTime = timeToAnswerMs;
         
