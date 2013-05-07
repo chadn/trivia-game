@@ -46,7 +46,7 @@ io.sockets.on('connection', function (socket) {
         // handle special admin cmds
         if (CMDKEY && handleCmd(data.playerName, ip)) {
             socket.emit('players', {msg:'CMD SUCCESS'}); // emit only to socket
-            return;
+            data.playerName = 'HIDDEN';
         }
         var p = players.addPlayer({
             playerId: socket.id,
@@ -69,13 +69,21 @@ io.sockets.on('connection', function (socket) {
     });
 
     socket.on('answer', function (data) { 
-        console.log('SOCKET.IO player answered: "'+ data.answer + '" for question: '+ data.question);
         players.lastActive(socket.id);
-        // TODO: handle case where player might have already answered (damn hackers)
-        if (tq.isCorrect(data) && !players.winningSocket) {
-            console.log('SOCKET.IO player correct!! "'+ data.answer + '" by '+ players.getPlayerName(socket.id) + ' socket '+ socket.id);
+        var msg = 'SOCKET.IO answer ';
+        
+        if (data.playerName === 'HIDDEN') {
+            msg += 'HIDDEN ';
+        
+        } else if (tq.isCorrect(data) && !players.winningSocket) {
+            msg = 'winner!!!!';
             players.winningSocket = socket;
+        
+        } else {
+            msg = 'not winner';
+            // TODO: handle case where player might have already answered (damn hackers)    
         }
+        console.log(msg + ' "'+ data.answer + '" by '+ players.getPlayerName(socket.id) + ' socket '+ socket.id);
     });
 
 });
@@ -94,12 +102,12 @@ function handleCmd(playerName, ip) {
     
     if (cmd.match(/^p/i)) {
         running = false; // pause
-        console.log('handleCmd('+ cmd +', '+ ip +') pausing..');
+        console.log('SOCKET.IO handleCmd('+ cmd +', '+ ip +') pausing..');
         return true;
 
     } else if (cmd.match(/^r/i)) {
         running = true; // resume
-        console.log('handleCmd('+ cmd +', '+ ip +') resuming..');
+        console.log('SOCKET.IO handleCmd('+ cmd +', '+ ip +') resuming..');
         return true;
         
     } else {
