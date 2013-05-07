@@ -7,6 +7,7 @@ var express = require('express'),
     mathQuestions = require('./data/mathQuestions'),
     tq = require('./lib/TriviaQuestions.js'),
     players = require('./lib/Players.js'),
+    CMDKEY = process.env.CMDKEY || '',
     PORT = process.env.PORT || 8080,
     url  = 'http://localhost:' + PORT + '/';
 
@@ -31,13 +32,19 @@ app.get('/', function (req, res) {
 var nextQuestionDelayMs = 5000; //5secs // how long are players 'warned' next question is coming
 var timeToAnswerMs = 10000; // 10secs // how long players have to answer question 
 var timeToEnjoyAnswerMs = 5000; //5secs // how long players have to read answer
-
+var running = true;
 
 //Socket.io emits this event when a connection is made.
 io.sockets.on('connection', function (socket) {
 
     socket.on('playerJoin', function (data) {
         var ip = socket.handshake.address.address;
+        
+        // handle special admin cmds
+        if (CMDKEY && handleCmd(data.playerName, ip)) {
+            socket.emit('players', {msg:'CMD SUCCESS'}); // emit only to socket
+            return;
+        }
         var p = players.addPlayer({
             playerId: socket.id,
             clientIp: ip,
@@ -45,10 +52,7 @@ io.sockets.on('connection', function (socket) {
         });
         console.log('SOCKET.IO player added: '+ p.name + ' from '+ ip + ' for socket '+ socket.id);
         emitPlayerUpdate(socket);
-        if (players.getPlayerCount() == 1) {
-            // start game!
             emitNewQuestion();
-        }
     });
     socket.on('disconnect', function() {
         var pname = players.getPlayerName(socket.id);
@@ -66,14 +70,47 @@ io.sockets.on('connection', function (socket) {
         players.lastActive(socket.id);
         // TODO: handle case where player might have already answered (damn hackers)
         if (tq.isCorrect(data) && !players.winningSocket) {
-            console.log('SOCKET.IO player correct ! =========> : "'+ data.answer + '", '+ players[socket.id] + ' for socket '+ socket.id);
+            console.log('SOCKET.IO player correct!! "'+ data.answer + '" by '+ players.getPlayerName(socket.id) + ' socket '+ socket.id);
             players.winningSocket = socket;
         }
     });
 
 });
 
+/*
+ * Handles special cmds.
+ *
+ * @param {String} playerName
+ * @return {Boolean} true if playerName was a valid cmd, false if it is not
+ */
+function handleCmd(playerName, ip) {
+    if (!(CMDKEY && playerName.substr(0,CMDKEY.length) == CMDKEY)) {
+        return false;
+    }
+    var cmd = playerName.substr(CMDKEY.length);
+    
+    if (cmd.match(/^p/i)) {
+        running = false; // pause
+        console.log('handleCmd('+ cmd +', '+ ip +') pausing..');
+        return true;
+
+    } else if (cmd.match(/^r/i)) {
+        running = true; // resume
+        console.log('handleCmd('+ cmd +', '+ ip +') resuming..');
+        return true;
+        
+    } else {
+        return false;
+    }
+    
+}
 function emitNewQuestion() {
+    if (!running) {
+        setTimeout(function(){
+            emitNewQuestion();
+        }, 1000);
+        return;
+    }
     players.winningSocket = null;
 
     io.sockets.emit('question', {

@@ -47,7 +47,7 @@ Game works on Chrome, Safari, iPad, iPhone, android ... NOT tested on IE.
 
 This list contains ideas. Can be generic (improve design) or specific (store client IP).
 
-- [ ] server: pause game without stopping server
+- [x] server: pause game without stopping server
 - [ ] server: add config file, so can specify different questions files
 - [ ] server: create admin UI (ADVANCED): choose new questions file, reset current questions, pause/resume questions
 - [ ] server/client: create shared module creates/interprets json containing question info, etc.
