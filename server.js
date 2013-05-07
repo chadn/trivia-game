@@ -71,17 +71,17 @@ io.sockets.on('connection', function (socket) {
 
     socket.on('answer', function (data) { 
         players.lastActive(socket.id);
-        var msg = 'SOCKET.IO answer ';
+        var msg = 'SOCKET.IO answer: ';
         
-        if (data.playerName === 'HIDDEN') {
-            msg += 'HIDDEN ';
+        if (players.getPlayerName(socket.id) === 'HIDDEN') {
+            msg += ' skipping ';
         
         } else if (tq.isCorrect(data) && !players.winningSocket) {
-            msg = 'winner!!!!';
+            msg += 'winner!!!!';
             players.winningSocket = socket;
         
         } else {
-            msg = 'not winner';
+            msg += 'not winner';
             // TODO: handle case where player might have already answered (damn hackers)    
         }
         console.log(msg + ' "'+ data.answer + '" by '+ players.getPlayerName(socket.id) + ' socket '+ socket.id);
