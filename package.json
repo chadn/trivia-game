@@ -8,7 +8,7 @@
     "test": "PORT=8420 node_modules/mocha/bin/mocha --reporter spec test/*.test.js",
     "start": "node server.js"
   },
-  "version": "0.2.1",
+  "version": "0.2.2",
   "dependencies": {
     "socket.io": "0.9.x",
     "express": "3.0.x"
