@@ -58,7 +58,7 @@ This list contains ideas. Can be generic (improve design) or specific (store cli
 - [x] players: store more player fields: client IP, createTime, lastActiveTime
 - [ ] players: store in db. Currently a server restart loose player info
 - [ ] questions: support meta info for group of questions: description, version, category
-- [ ] questions: support categoy per question (default to questions category if none)
+- [ ] questions: support category per question (default to questions category if none)
 
 # License
 
