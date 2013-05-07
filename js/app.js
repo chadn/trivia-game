@@ -150,7 +150,7 @@ $(function(){
                 pct = 0;
             }
             $bar.width(pct + '%');
-            if (pct < 20) {
+            if (pct < 15) {
                 $prog.removeClass('progress-info progress-warning').addClass('progress-danger');
                 
             } else if (pct < 40) {
