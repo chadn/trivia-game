@@ -7,6 +7,7 @@ var express = require('express'),
     mathQuestions = require('./data/mathQuestions'),
     tq = require('./lib/TriviaQuestions.js'),
     players = require('./lib/Players.js'),
+    LOGLEVEL = process.env.LOGLEVEL || 2, // 1 == warn, 2 == info, 3 == debug
     CMDKEY = process.env.CMDKEY || '',
     PORT = process.env.PORT || 8080,
     url  = 'http://localhost:' + PORT + '/';
@@ -28,7 +29,7 @@ app.get('/', function (req, res) {
     res.sendfile(__dirname + '/index.html');
 });
 
-io.set('log level', 2); // 1 == warn, 2 == info, 3 == debug
+io.set('log level', LOGLEVEL); // 1 == warn, 2 == info, 3 == debug
 
 var nextQuestionDelayMs = 5000; //5secs // how long are players 'warned' next question is coming
 var timeToAnswerMs = 10000; // 10secs // how long players have to answer question 
@@ -36,10 +37,10 @@ var timeToEnjoyAnswerMs = 5000; //5secs // how long players have to read answer
 var running = false;
 emitNewQuestion();
 if (CMDKEY) {
-    console.log('Game paused, to start, join as "' + CMDKEY +'resume"');
+    console.log('Game paused, to start, join as "' + CMDKEY +'resume"  LOGLEVEL='+ LOGLEVEL);
     
 } else {
-    console.log('Game starting (no CMDKEY found).');
+    console.log('Game starting (no CMDKEY found).  LOGLEVEL='+ LOGLEVEL);
     running = true;
 }
 
