@@ -35,7 +35,13 @@ var timeToAnswerMs = 10000; // 10secs // how long players have to answer questio
 var timeToEnjoyAnswerMs = 5000; //5secs // how long players have to read answer
 var running = false;
 emitNewQuestion();
-console.log('Game paused, to start, join as "' + CMDKEY +'resume"');
+if (CMDKEY) {
+    console.log('Game paused, to start, join as "' + CMDKEY +'resume"');
+    
+} else {
+    console.log('Game starting (no CMDKEY found).');
+    running = true;
+}
 
 
 //Socket.io emits this event when a connection is made.
